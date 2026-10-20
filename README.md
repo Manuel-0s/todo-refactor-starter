@@ -65,9 +65,19 @@ El puerto puede cambiar según la configuración de Live Server.
 - `src/app.js`: interfaz inicial; en la Misión 9 deberá delegar la lógica a `taskService.js`.
 - `tests/taskService.test.js`: suite incremental de pruebas unitarias con Vitest.
 
-## Misión 0 · Antes de modificar código
+## Registro RED → GREEN → REFACTOR
 
-Responde aquí:
+Documenta al menos una iteración:
+
+- **RED:** ¿qué prueba escribiste y por qué falló?
+- **GREEN:** ¿cuál fue el cambio mínimo que la hizo pasar?
+- **REFACTOR:** ¿qué mejoraste sin cambiar el comportamiento?
+
+## Pair Programming
+
+Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien roles con frecuencia y no hagan commit hasta que ambos puedan explicar el código y la prueba.
+
+## Misión 0 · Antes de modificar código
 
 1. ¿Dónde almacenarías ahora el estado `completada` de una tarea?
    Lo almacenaría en el local storage usando de base un archivo JSON.
@@ -84,14 +94,10 @@ Responde aquí:
 2. Eliminar tareas del DOM
 3. Contador de tareas
 
-## Registro RED → GREEN → REFACTOR
 
-Documenta al menos una iteración:
+### MISION 1
+- Driver: Manuel
 
-- **RED:** ¿qué prueba escribiste y por qué falló?
-- **GREEN:** ¿cuál fue el cambio mínimo que la hizo pasar?
-- **REFACTOR:** ¿qué mejoraste sin cambiar el comportamiento?
+- Navigator: Uriel
 
-## Pair Programming
-
-Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien roles con frecuencia y no hagan commit hasta que ambos puedan explicar el código y la prueba.
+Las tareas pasaron de texto a ser representadas como objeto, ademas se cambia la definicion de la variable let a var por motivos de seguridad.

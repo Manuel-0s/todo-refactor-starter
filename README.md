@@ -70,15 +70,19 @@ El puerto puede cambiar según la configuración de Live Server.
 Responde aquí:
 
 1. ¿Dónde almacenarías ahora el estado `completada` de una tarea?
+   Lo almacenaría en el local storage usando de base un archivo JSON.
 2. ¿Qué ocurriría si mañana cada tarea necesita prioridad, fecha o responsable?
+   Se debería de añadir un nuevo atributo al objeto de la tarea, ya que se planeo desde antes como un objeto JSON.
 3. ¿Qué parte del código representa datos y qué parte representa interfaz?
+   La interfaz está en el archivo index.html y los datos están en el archivo App.js, aun que en el futuro se planea moverlos a un JSON y se modificaran desde el archivo TaskService.js
 4. ¿Qué comportamiento debemos conservar durante el refactor?
+   Todo el comportamiento observable y funcionalidad para el usuario final, por ejemplo los botones y listas.
 
 ### Tres comportamientos observables que NO deben cambiar
 
-1. 
-2. 
-3. 
+1. Agregar tareas al DOM
+2. Eliminar tareas del DOM
+3. Contador de tareas
 
 ## Registro RED → GREEN → REFACTOR
 

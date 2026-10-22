@@ -255,3 +255,65 @@ está en orden.
 
 El resultado es exitoso: las pruebas fueron satisfactorias, lo que indica que
 las tres de agregar tarea fueron correctas.
+
+## Misión 4
+
+- **Driver:** Uriel
+- **Navigator:** Manuel
+
+Se implementó la función pura `buscarTarea(tareas, id)` para localizar un elemento específico dentro de la colección por su identificador único.
+
+### RED: escribir las pruebas unitarias
+
+Escribimos dos pruebas unitarias para cubrir ambos escenarios (existente e inexistente):
+
+1. **ID existente:** Debe encontrar y retornar el objeto de la tarea correspondiente.
+2. **ID inexistente:** Debe retornar `undefined` de manera determinista sin arrojar excepciones.
+
+```javascript
+describe("buscarTarea", () => {
+  it("encuentra y retorna la tarea cuando el id existe", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Primera tarea", completada: false },
+      { id: 2, titulo: "Segunda tarea", completada: true }
+    ];
+
+    // Act
+    const resultado = buscarTarea(tareas, 2);
+
+    // Assert
+    expect(resultado).toEqual({ id: 2, titulo: "Segunda tarea", completada: true });
+  });
+
+  it("retorna undefined cuando el id no existe", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Primera tarea", completada: false }
+    ];
+
+    // Act
+    const resultado = buscarTarea(tareas, 999);
+
+    // Assert
+    expect(resultado).toBeUndefined();
+  });
+});
+```
+
+Al correr `npm test`, la suite falló como se esperaba porque `buscarTarea` lanzaba el error pendiente de implementación.
+
+### GREEN: implementar el código mínimo
+
+Implementamos la función utilizando el método de arreglo estándar de JavaScript `find()`, el cual devuelve el primer elemento que satisface la condición o `undefined` si no se encuentra:
+
+```javascript
+export function buscarTarea(tareas, id) {
+  return tareas.find(tarea => tarea.id === id);
+}
+```
+
+Al volver a ejecutar `npm test`, las 6 pruebas pasaron exitosamente (4 previas + 2 de la Misión 4).
+
+![Resultado de las pruebas de la Misión 4](images/image-4.png)
+

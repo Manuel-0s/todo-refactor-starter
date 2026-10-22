@@ -406,3 +406,76 @@ Al reejecutar las pruebas, los 12 tests pasaron de inmediato en verde.
 
 ![Resultado de las pruebas de la Misión 5](images/image-5.png)
 
+## Misión 6
+
+- **Driver:** Uriel
+- **Navigator:** Manuel
+
+
+En esta misión se implementó `cambiarEstado(tareas, id)` para alternar la propiedad `completada` de una tarea manteniendo la inmutabilidad tanto del arreglo principal como de los objetos internos.
+
+### RED: escribir las pruebas unitarias
+
+Diseñamos 3 pruebas para validar el comportamiento esperado y garantizar que no haya efectos secundarios:
+1. **Cambio de estado correcto:** Que invierta la propiedad `completada` (`false` a `true` o viceversa) de la tarea indicada.
+2. **Inmutabilidad y preservación:** Que las demás tareas permanezcan intactas y no se muten las instancias originales en memoria.
+3. **ID inexistente:** Que si no existe el identificador, devuelva un arreglo equivalente sin errores.
+
+```javascript
+describe("cambiarEstado", () => {
+  it("alterna el estado completada de la tarea con el id especificado", () => {
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+    const resultado = cambiarEstado(tareas, 1);
+    expect(resultado.find(t => t.id === 1)).toEqual({
+      id: 1,
+      titulo: "Tarea 1",
+      completada: true
+    });
+  });
+
+  it("mantiene intactas las demás tareas sin mutarlas", () => {
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+    const resultado = cambiarEstado(tareas, 1);
+    expect(resultado.find(t => t.id === 2)).toEqual({
+      id: 2,
+      titulo: "Tarea 2",
+      completada: false
+    });
+    expect(resultado).not.toBe(tareas);
+    expect(tareas[0].completada).toBe(false);
+  });
+
+  it("retorna una copia equivalente si el id no existe", () => {
+    const tareas = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const resultado = cambiarEstado(tareas, 999);
+    expect(resultado).toEqual(tareas);
+    expect(resultado).not.toBe(tareas);
+  });
+});
+```
+
+Al ejecutar `npm test`, las 3 pruebas fallaron confirmando la fase RED.
+
+### GREEN: implementar el código mínimo
+
+Implementamos `cambiarEstado` mediante `map()` y el operador spread `{ ...tarea }` para crear una copia inmutable únicamente del elemento modificado:
+
+```javascript
+export function cambiarEstado(tareas, id) {
+  return tareas.map((tarea) =>
+    tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea
+  );
+}
+```
+
+Al volver a ejecutar `npm test`, las 15 pruebas pasaron en verde.
+
+![Resultado de las pruebas de la Misión 6](images/image-6.png)
+
+

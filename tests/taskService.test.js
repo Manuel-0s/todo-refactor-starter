@@ -198,6 +198,61 @@ describe("obtenerTerminadas", () => {
 });
 
 // MISIÓN 6: prueba cambio correcto, otra tarea intacta e id inexistente.
+describe("cambiarEstado", () => {
+  it("alterna el estado completada de la tarea con el id especificado", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+
+    // Act
+    const resultado = cambiarEstado(tareas, 1);
+
+    // Assert
+    expect(resultado.find(t => t.id === 1)).toEqual({
+      id: 1,
+      titulo: "Tarea 1",
+      completada: true
+    });
+  });
+
+  it("mantiene intactas las demás tareas sin mutarlas", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+
+    // Act
+    const resultado = cambiarEstado(tareas, 1);
+
+    // Assert
+    expect(resultado.find(t => t.id === 2)).toEqual({
+      id: 2,
+      titulo: "Tarea 2",
+      completada: false
+    });
+    // Inmutabilidad del arreglo y de los objetos originales
+    expect(resultado).not.toBe(tareas);
+    expect(tareas[0].completada).toBe(false);
+  });
+
+  it("retorna una copia equivalente si el id no existe", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false }
+    ];
+
+    // Act
+    const resultado = cambiarEstado(tareas, 999);
+
+    // Assert
+    expect(resultado).toEqual(tareas);
+    expect(resultado).not.toBe(tareas);
+  });
+});
+
 // MISIÓN 7: prueba eliminar existente, inexistente y colección vacía.
 // MISIÓN 8: prueba obtenerResumen(), incluyendo colección vacía.
 

@@ -36,6 +36,53 @@ describe("crearTarea", () => {
 });
 
 // MISIÓN 3: agrega al menos dos pruebas para agregarTarea().
+// Prueba 1: Verifica que la nueva tarea esté dentro del arreglo devuelto
+describe("agregarTarea", () => {
+  it('agrega una tarea a la lista existente', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const nuevaTarea = { id: 2, titulo: "Nueva tarea", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado).toContainEqual(nuevaTarea);
+  });
+});
+
+// Prueba 2: Verifica que el resultado contenga un elemento más que el inicial
+describe("agregarTarea", () => {
+  it('incrementa en uno la cantidad total de tareas', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado.length).toBe(tareasIniciales.length + 1);
+  });
+});
+
+// Prueba 3: Verifica que el nuevo arreglo no sea el mismo que el original (inmutabilidad)
+describe("agregarTarea", () => {
+  it('no muta el arreglo original de tareas', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const copiaInicial = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado).not.toBe(tareasIniciales); // Referencias distintas
+    expect(tareasIniciales).toEqual(copiaInicial); // El contenido original no cambia
+  });
+});
+
 // MISIÓN 4: prueba id existente e inexistente para buscarTarea().
 // MISIÓN 5: prueba colección mixta, sin coincidencias y vacía.
 // MISIÓN 6: prueba cambio correcto, otra tarea intacta e id inexistente.

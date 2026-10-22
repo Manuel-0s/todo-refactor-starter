@@ -95,7 +95,7 @@ Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien 
 3. Contador de tareas
 
 
-### Misión 1
+## Misión 1
 - Driver: Manuel
 
 - Navigator: Uriel
@@ -122,12 +122,12 @@ Las tareas pasaron de texto a ser representadas como objetos, no hubo ninguna co
    ];
 ```
 
-### Misión 2
+## Misión 2
 
 - **Driver:** Manuel
 - **Navigator:** Uriel
 
-#### RED: escribir la prueba unitaria
+### RED: escribir la prueba unitaria
 
 Antes de escribir el código de la función, usamos una prueba unitaria. Esta
 prueba especifica cómo debe comportarse `crearTarea`.
@@ -144,7 +144,7 @@ La prueba falló porque la función `crearTarea` aún no existe o no devuelve lo
 esperado. Esto confirma que la prueba realmente está verificando algo que aún
 no se ha implementado.
 
-#### GREEN: implementar el código mínimo
+### GREEN: implementar el código mínimo
 
 Una vez comprobado que la prueba unitaria está lista, escribimos el código
 mínimo necesario para que pase:
@@ -167,3 +167,91 @@ Con esta práctica entendimos mejor el propósito de las pruebas unitarias:
 en lugar de realizar la prueba manualmente, solo se define el comportamiento y,
 al ejecutar `npm test`, se verifica en milisegundos si la función devuelve el
 objeto correcto.
+
+## Misión 3
+
+- **Driver:** Manuel
+- **Navigator:** Uriel
+
+Dada una lista de tareas y una nueva tarea, la función debe retornar una
+colección que combine ambas. Para este problema, Uriel indicó que la solución
+más sencilla, debido a su experiencia en el desarrollo web, sería utilizar el
+operador spread (`...`). Este operador sirve para copiar todos los elementos
+del arreglo original `tareas` y crear un nuevo arreglo.
+
+```javascript
+return [...tareas, nuevaTarea];
+```
+
+### Prueba 1: agregar una tarea a la lista
+
+La prueba se diseñó para iniciar con el arreglo de tareas y la nueva tarea.
+Después, se llama a `agregarTarea`. El resultado esperado es que la nueva
+colección contenga `nuevaTarea`.
+
+```javascript
+describe("agregarTarea", () => {
+  it('agrega una tarea a la lista existente', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const nuevaTarea = { id: 2, titulo: "Nueva tarea", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado).toContainEqual(nuevaTarea);
+  });
+});
+```
+
+### Prueba 2: Verificar que la nueva lista contiene un elemento extra
+
+Se diseñó para comprobar que la nueva colección es más grande. Por ello, se
+verifica que tenga un elemento más que la colección inicial; el resultado debe
+ser `tareasIniciales.length + 1`.
+
+```javascript
+describe("agregarTarea", () => {
+  it('incrementa en uno la cantidad total de tareas', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado.length).toBe(tareasIniciales.length + 1);
+  });
+});
+```
+
+### Prueba 3: Verifica que el nuevo arreglo no sea el mismo que el original (inmutabilidad) 
+Para detectar si agregarTarea está modificando directamente el arreglo original recibido, se comprueba que el nuevo arreglo no sea igual al original, además de comprobar que la copia de este sea idéntica al original para asegurar que ni el contenido ni la referencia del arreglo original sean alterados.
+
+```javascript
+describe("agregarTarea", () => {
+  it('no muta el arreglo original de tareas', () => {
+    // Arrange
+    const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    const copiaInicial = [...tareasIniciales]
+    const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
+
+    // Act
+    const resultado = agregarTarea(tareasIniciales, nuevaTarea);
+
+    // Assert
+    expect(resultado).not.toBe(tareasIniciales); // Referencias distintas
+    expect(tareasIniciales).toEqual(copiaInicial); // El contenido original no cambia
+  });
+});
+```
+
+Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
+está en orden.
+
+![Resultado de las pruebas](images/image-3.png)
+
+El resultado es exitoso: las pruebas fueron satisfactorias, lo que indica que
+las tres de agregar tarea fueron correctas.

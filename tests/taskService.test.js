@@ -114,6 +114,89 @@ describe("buscarTarea", () => {
 });
 
 // MISIÓN 5: prueba colección mixta, sin coincidencias y vacía.
+describe("obtenerPendientes", () => {
+  it("filtra solo las tareas pendientes de una colección mixta", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: false }
+    ];
+
+    // Act
+    const resultado = obtenerPendientes(tareas);
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 3, titulo: "Tarea 3", completada: false }
+    ]);
+  });
+
+  it("retorna arreglo vacío si no hay pendientes (todas terminadas)", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: true },
+      { id: 2, titulo: "Tarea 2", completada: true }
+    ];
+
+    // Act
+    const resultado = obtenerPendientes(tareas);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = obtenerPendientes([]);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+});
+
+describe("obtenerTerminadas", () => {
+  it("filtra solo las tareas terminadas de una colección mixta", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: true }
+    ];
+
+    // Act
+    const resultado = obtenerTerminadas(tareas);
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: true }
+    ]);
+  });
+
+  it("retorna arreglo vacío si no hay terminadas (todas pendientes)", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false }
+    ];
+
+    // Act
+    const resultado = obtenerTerminadas(tareas);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = obtenerTerminadas([]);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+});
+
 // MISIÓN 6: prueba cambio correcto, otra tarea intacta e id inexistente.
 // MISIÓN 7: prueba eliminar existente, inexistente y colección vacía.
 // MISIÓN 8: prueba obtenerResumen(), incluyendo colección vacía.

@@ -94,8 +94,8 @@ Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien 
 2. Eliminar tareas del DOM
 3. Contador de tareas
 
-
 ## Misión 1
+
 - Driver: Manuel
 
 - Navigator: Uriel
@@ -103,23 +103,23 @@ Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien 
 Las tareas pasaron de texto a ser representadas como objetos, no hubo ninguna complicación en su implementación debido a su sencillez.
 
 ```javascript
-   let tareas = [
-   {
-      id: 0,
-      titulo: "Revisar requisitos",
-      completada: false
-   },
-   {
-      id: 1,
-      titulo: "Diseñar pruebas",
-      completada: false
-   },
-   {
-      id: 2,
-      titulo: "Refactorizar código",
-      completada: false
-   }
-   ];
+let tareas = [
+  {
+    id: 0,
+    titulo: "Revisar requisitos",
+    completada: false,
+  },
+  {
+    id: 1,
+    titulo: "Diseñar pruebas",
+    completada: false,
+  },
+  {
+    id: 2,
+    titulo: "Refactorizar código",
+    completada: false,
+  },
+];
 ```
 
 ## Misión 2
@@ -153,7 +153,7 @@ mínimo necesario para que pase:
 return {
   id: id,
   titulo: titulo,
-  completada: false
+  completada: false,
 };
 ```
 
@@ -191,7 +191,7 @@ colección contenga `nuevaTarea`.
 
 ```javascript
 describe("agregarTarea", () => {
-  it('agrega una tarea a la lista existente', () => {
+  it("agrega una tarea a la lista existente", () => {
     // Arrange
     const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
     const nuevaTarea = { id: 2, titulo: "Nueva tarea", completada: false };
@@ -213,7 +213,7 @@ ser `tareasIniciales.length + 1`.
 
 ```javascript
 describe("agregarTarea", () => {
-  it('incrementa en uno la cantidad total de tareas', () => {
+  it("incrementa en uno la cantidad total de tareas", () => {
     // Arrange
     const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
     const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
@@ -227,15 +227,16 @@ describe("agregarTarea", () => {
 });
 ```
 
-### Prueba 3: Verifica que el nuevo arreglo no sea el mismo que el original (inmutabilidad) 
+### Prueba 3: Verifica que el nuevo arreglo no sea el mismo que el original (inmutabilidad)
+
 Para detectar si agregarTarea está modificando directamente el arreglo original recibido, se comprueba que el nuevo arreglo no sea igual al original, además de comprobar que la copia de este sea idéntica al original para asegurar que ni el contenido ni la referencia del arreglo original sean alterados.
 
 ```javascript
 describe("agregarTarea", () => {
-  it('no muta el arreglo original de tareas', () => {
+  it("no muta el arreglo original de tareas", () => {
     // Arrange
     const tareasIniciales = [{ id: 1, titulo: "Tarea 1", completada: false }];
-    const copiaInicial = [...tareasIniciales]
+    const copiaInicial = [...tareasIniciales];
     const nuevaTarea = { id: 2, titulo: "Tarea 2", completada: false };
 
     // Act
@@ -276,21 +277,23 @@ describe("buscarTarea", () => {
     // Arrange
     const tareas = [
       { id: 1, titulo: "Primera tarea", completada: false },
-      { id: 2, titulo: "Segunda tarea", completada: true }
+      { id: 2, titulo: "Segunda tarea", completada: true },
     ];
 
     // Act
     const resultado = buscarTarea(tareas, 2);
 
     // Assert
-    expect(resultado).toEqual({ id: 2, titulo: "Segunda tarea", completada: true });
+    expect(resultado).toEqual({
+      id: 2,
+      titulo: "Segunda tarea",
+      completada: true,
+    });
   });
 
   it("retorna undefined cuando el id no existe", () => {
     // Arrange
-    const tareas = [
-      { id: 1, titulo: "Primera tarea", completada: false }
-    ];
+    const tareas = [{ id: 1, titulo: "Primera tarea", completada: false }];
 
     // Act
     const resultado = buscarTarea(tareas, 999);
@@ -309,11 +312,97 @@ Implementamos la función utilizando el método de arreglo estándar de JavaScri
 
 ```javascript
 export function buscarTarea(tareas, id) {
-  return tareas.find(tarea => tarea.id === id);
+  return tareas.find((tarea) => tarea.id === id);
 }
 ```
 
 Al volver a ejecutar `npm test`, las 6 pruebas pasaron exitosamente (4 previas + 2 de la Misión 4).
 
 ![Resultado de las pruebas de la Misión 4](images/image-4.png)
-
+
+## Misión 5
+
+- **Driver:** Uriel
+- **Navigator:** Manuel
+
+En esta misión implementamos dos funciones de filtrado puro: `obtenerPendientes(tareas)` y `obtenerTerminadas(tareas)` para desacoplar el filtrado por estado de la vista.
+
+### RED: escribir las pruebas unitarias
+
+Siguiendo las pautas de diseño de software y TDD, diseñamos 3 pruebas para cada función cubriendo los 3 escenarios esenciales:
+
+1. **Colección mixta:** Que se filtren únicamente las que corresponden al estado solicitado.
+2. **Sin coincidencias:** Que devuelva un arreglo vacío `[]` cuando todas las tareas tengan el estado opuesto.
+3. **Colección vacía:** Que maneje de forma segura un arreglo vacío inicial `[]` retornando `[]`.
+
+```javascript
+describe("obtenerPendientes", () => {
+  it("filtra solo las tareas pendientes de una colección mixta", () => {
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: false },
+    ];
+    expect(obtenerPendientes(tareas)).toEqual([
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 3, titulo: "Tarea 3", completada: false },
+    ]);
+  });
+
+  it("retorna arreglo vacío si no hay pendientes (todas terminadas)", () => {
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: true },
+      { id: 2, titulo: "Tarea 2", completada: true },
+    ];
+    expect(obtenerPendientes(tareas)).toEqual([]);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    expect(obtenerPendientes([])).toEqual([]);
+  });
+});
+
+describe("obtenerTerminadas", () => {
+  it("filtra solo las tareas terminadas de una colección mixta", () => {
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: true },
+    ];
+    expect(obtenerTerminadas(tareas)).toEqual([
+      { id: 2, titulo: "Tarea 2", completada: true },
+      { id: 3, titulo: "Tarea 3", completada: true },
+    ]);
+  });
+
+  it("retorna arreglo vacío si no hay terminadas (todas pendientes)", () => {
+    const tareas = [{ id: 1, titulo: "Tarea 1", completada: false }];
+    expect(obtenerTerminadas(tareas)).toEqual([]);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    expect(obtenerTerminadas([])).toEqual([]);
+  });
+});
+```
+
+Al correr `npm test`, fallaron las 6 nuevas pruebas comprobando la fase RED.
+
+### GREEN: implementar el código mínimo
+
+Utilizamos el método funcional inmutable `filter()`:
+
+```javascript
+export function obtenerPendientes(tareas) {
+  return tareas.filter((tarea) => !tarea.completada);
+}
+
+export function obtenerTerminadas(tareas) {
+  return tareas.filter((tarea) => tarea.completada);
+}
+```
+
+Al reejecutar las pruebas, los 12 tests pasaron de inmediato en verde.
+
+![Resultado de las pruebas de la Misión 5](images/image-5.png)
+

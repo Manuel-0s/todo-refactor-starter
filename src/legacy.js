@@ -6,7 +6,7 @@
  * qué responsabilidades están mezcladas y qué comportamientos deben conservarse.
  */
 
-var tareas = [
+let tareas = [
   {
     id: 0,
     titulo: "Revisar requisitos",

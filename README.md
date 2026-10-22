@@ -95,9 +95,75 @@ Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien 
 3. Contador de tareas
 
 
-### MISION 1
+### Misión 1
 - Driver: Manuel
 
 - Navigator: Uriel
 
-Las tareas pasaron de texto a ser representadas como objeto, ademas se cambia la definicion de la variable let a var por motivos de seguridad.
+Las tareas pasaron de texto a ser representadas como objetos, no hubo ninguna complicación en su implementación debido a su sencillez.
+
+```javascript
+   let tareas = [
+   {
+      id: 0,
+      titulo: "Revisar requisitos",
+      completada: false
+   },
+   {
+      id: 1,
+      titulo: "Diseñar pruebas",
+      completada: false
+   },
+   {
+      id: 2,
+      titulo: "Refactorizar código",
+      completada: false
+   }
+   ];
+```
+
+### Misión 2
+
+- **Driver:** Manuel
+- **Navigator:** Uriel
+
+#### RED: escribir la prueba unitaria
+
+Antes de escribir el código de la función, usamos una prueba unitaria. Esta
+prueba especifica cómo debe comportarse `crearTarea`.
+
+Ejecutamos el comando de pruebas en la terminal:
+
+```bash
+npm test
+```
+
+![Resultado de la prueba en rojo](images/image-1.png)
+
+La prueba falló porque la función `crearTarea` aún no existe o no devuelve lo
+esperado. Esto confirma que la prueba realmente está verificando algo que aún
+no se ha implementado.
+
+#### GREEN: implementar el código mínimo
+
+Una vez comprobado que la prueba unitaria está lista, escribimos el código
+mínimo necesario para que pase:
+
+```javascript
+return {
+  id: id,
+  titulo: titulo,
+  completada: false
+};
+```
+
+Volvemos a ejecutar `npm test`.
+
+![Resultado de la prueba en verde](images/image-2.png)
+
+Ahora la prueba aparece en verde, lo que indica que funcionó correctamente.
+
+Con esta práctica entendimos mejor el propósito de las pruebas unitarias:
+en lugar de realizar la prueba manualmente, solo se define el comportamiento y,
+al ejecutar `npm test`, se verifica en milisegundos si la función devuelve el
+objeto correcto.

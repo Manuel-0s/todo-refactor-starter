@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+
 import {
   crearTarea,
   agregarTarea,
@@ -254,7 +255,78 @@ describe("cambiarEstado", () => {
 });
 
 // MISIÓN 7: prueba eliminar existente, inexistente y colección vacía.
-// MISIÓN 8: prueba obtenerResumen(), incluyendo colección vacía.
+describe("eliminarTarea", () => {
+  it("elimina la tarea con el id especificado", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+
+    // Act
+    const resultado = eliminarTarea(tareas, 1);
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ]);
+  });
+
+  it("retorna una copia equivalente si el id no existe", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false }
+    ];
+
+    // Act
+    const resultado = eliminarTarea(tareas, 999);
+
+    // Assert
+    expect(resultado).toEqual(tareas);
+    expect(resultado).not.toBe(tareas);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = eliminarTarea([], 1);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+});
+
+// MISIÓN 8: prueba obtenerResumen(), incluyendo colección vacía.0
+describe("obtenerResumen", () => {
+  it("devuelve el resumen de tareas", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true }
+    ];
+
+    // Act
+    const resultado = obtenerResumen(tareas);
+
+    // Assert
+    expect(resultado).toEqual({
+      total: 2,
+      pendientes: 1,
+      completadas: 1
+    });
+  });
+
+  it("retorna resumen vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = obtenerResumen([]);
+
+    // Assert
+    expect(resultado).toEqual({
+      total: 0,
+      completadas: 0,
+      pendientes: 0
+    });
+  });
+});
 
 // Los imports anteriores quedan preparados para que construyas la suite de forma incremental.
 void agregarTarea;

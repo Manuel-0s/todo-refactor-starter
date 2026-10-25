@@ -478,4 +478,73 @@ Al volver a ejecutar `npm test`, las 15 pruebas pasaron en verde.
 
 ![Resultado de las pruebas de la Misión 6](images/image-6.png)
 
+### Misión 7
 
+- **Driver:** Manuel
+- **Navigator:** Uriel
+
+Para implementar el método `eliminarTarea(tareas, id)`, tomamos en cuenta la
+pista proporcionada: «conserva todas excepto una». Por eso decidimos utilizar
+la función `filter`, que recibe la lista y devuelve una nueva con todas las
+tareas cuyo identificador es diferente del que se desea eliminar.
+
+```javascript
+export function eliminarTarea(tareas, id) {
+  return tareas.filter(tarea => tarea.id !== id);
+}
+```
+
+Se diseñaron tres pruebas para diferentes situaciones al momento de eliminar
+tareas:
+
+- Cuando se elimina una tarea con el identificador especificado.
+- Cuando se intenta eliminar una tarea que no existe.
+- Cuando se intenta eliminar una colección vacía.
+
+```javascript
+describe("eliminarTarea", () => {
+  it("elimina la tarea con el id especificado", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ];
+
+    // Act
+    const resultado = eliminarTarea(tareas, 1);
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 2, titulo: "Tarea 2", completada: false }
+    ]);
+  });
+
+  it("retorna una copia equivalente si el id no existe", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false }
+    ];
+
+    // Act
+    const resultado = eliminarTarea(tareas, 999);
+
+    // Assert
+    expect(resultado).toEqual(tareas);
+    expect(resultado).not.toBe(tareas);
+  });
+
+  it("retorna arreglo vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = eliminarTarea([], 1);
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+});
+
+```
+
+Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
+está en orden. Las tres pruebas de eliminación de tareas pasaron sin fallos.
+
+![alt text](images/image-7.png)

@@ -8,6 +8,7 @@
     "test:watch": "vitest"
   },
   "devDependencies": {
+    "jest": "^30.5.2",
     "vitest": "^2.1.0"
   }
 }

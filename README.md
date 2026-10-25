@@ -647,3 +647,125 @@ Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
 está en orden. Las dos pruebas de `obtenerResumen` pasaron sin fallos.
 
 ![alt text](images/image-8.png)
+
+
+## Misión 9
+
+- **Driver:** Manuel
+- **Navigator:** Uriel
+
+En esta misión se integró `taskService.js` con `app.js`. El DOM funciona como
+adaptador: recibe los eventos del usuario, delega las reglas al servicio,
+actualiza el estado de `tareas` y vuelve a representar la interfaz mediante
+`render()`.
+
+El flujo verificado fue:
+
+```text
+evento del usuario
+↓
+app.js
+↓
+taskService.js
+↓
+nuevo estado
+↓
+render()
+↓
+DOM
+```
+
+### Prueba 1: alta válida
+
+**Pasos:**
+
+1. Escribir un título en el campo de nueva tarea.
+2. Presionar el botón «Agregar».
+
+**Resultado esperado:** aparece una nueva tarea pendiente y se actualiza el
+resumen con los contadores correspondientes.
+
+**Resultado observado:** inicialmente se intentó mostrar cada elemento como si
+fuera un texto, aunque después de la refactorización las tareas son objetos.
+Por ese motivo, la interfaz mostraba un resultado incorrecto.
+
+**Corrección:** se actualizó `render()` para acceder a la propiedad
+`tarea.titulo` y representar cada tarea a partir de sus propiedades:
+
+```javascript
+tareasVisibles.forEach(tarea => {
+  const li = document.createElement("li");
+  const title = document.createElement("span");
+  title.className = "title";
+  title.textContent = tarea.titulo;
+  li.append(title);
+  list.appendChild(li);
+});
+```
+
+![Resultado de alta invalido](images/image-9.png)
+
+Después de la corrección, la tarea se muestra correctamente y permanece en
+estado pendiente.
+
+![Resultado del alta válida](images/image-10.png)
+
+### Prueba 2: alta inválida
+
+**Pasos:** intentar agregar una tarea sin escribir un título.
+
+**Resultado esperado:** no se agrega ninguna tarea y aparece un mensaje
+indicando que se debe escribir un título.
+
+**Resultado observado:** la validación funciona correctamente; la lista y el
+resumen permanecen sin cambios.
+
+![Resultado del alta inválida](images/image-11.png)
+
+### Prueba 3: cambio de estado
+
+**Pasos:** presionar «Completar» en una tarea pendiente.
+
+**Resultado esperado:** la tarea cambia a completada, se muestra con el estilo
+de tarea terminada y se actualizan los contadores.
+
+**Resultado observado:** la tarea aparece tachada, cambia su estilo visual y el
+resumen refleja una tarea pendiente menos y una tarea completada más.
+
+![Resultado del cambio de estado](images/image-12.png)
+
+### Prueba 4: filtrado
+
+**Pasos:**
+
+1. Crear dos tareas.
+2. Marcar una de ellas como completada.
+3. Seleccionar el filtro «Pendientes».
+
+**Resultado esperado:** solo se muestran las tareas pendientes. El resumen
+continúa mostrando el total global de tareas: en este caso, dos tareas en
+total, una pendiente y una completada.
+
+**Resultado observado:** el filtro muestra únicamente la tarea pendiente y los
+contadores se mantienen correctos, por lo que la integración funciona.
+
+![Resultado del filtro](images/image-13.png)
+
+### Prueba 5: eliminación
+
+**Pasos:** presionar «Eliminar» en una tarea existente.
+
+**Resultado esperado:** la tarea desaparece de la lista y el resumen se
+actualiza sin afectar las demás tareas.
+
+**Resultado observado:** la tarea se elimina correctamente y el resumen se
+actualiza después de volver a ejecutar `render()`.
+
+![Estado antes de eliminar](images/image-14.png)
+
+![Estado después de eliminar](images/image-15.png)
+
+Estas pruebas confirmaron que la interfaz ya no contiene la lógica de negocio
+principal. `app.js` se encarga de leer eventos y representar el estado,
+mientras que `taskService.js` conserva las operaciones sobre las tareas y se
+mantiene protegido por pruebas unitarias.

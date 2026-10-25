@@ -42,7 +42,6 @@ export function cambiarEstado(tareas, id) {
   );
 }
 
-
 // MISIÓN 7
 export function eliminarTarea(tareas, id) {
   return tareas.filter(tarea => tarea.id !== id);
@@ -51,8 +50,8 @@ export function eliminarTarea(tareas, id) {
 // MISIÓN 8
 export function obtenerResumen(tareas) {
   const total = tareas.length;
-  const completadas = this.obtenerTerminadas(tareas).length;
-  const pendientes = this.obtenerPendientes(tareas).length;
+  const completadas = obtenerTerminadas(tareas).length;
+  const pendientes = obtenerPendientes(tareas).length;
 
   return {
     total,

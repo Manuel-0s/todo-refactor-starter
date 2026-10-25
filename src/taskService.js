@@ -48,3 +48,15 @@ export function eliminarTarea(tareas, id) {
   return tareas.filter(tarea => tarea.id !== id);
 }
 
+// MISIÓN 8
+export function obtenerResumen(tareas) {
+  const total = tareas.length;
+  const completadas = this.obtenerTerminadas(tareas).length;
+  const pendientes = this.obtenerPendientes(tareas).length;
+
+  return {
+    total,
+    completadas,
+    pendientes
+  };
+}

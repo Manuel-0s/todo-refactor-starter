@@ -548,3 +548,102 @@ Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
 está en orden. Las tres pruebas de eliminación de tareas pasaron sin fallos.
 
 ![alt text](images/image-7.png)
+
+## Misión 8
+
+- **Driver:** Manuel
+- **Navigator:** Uriel
+
+La implementación de la función `obtenerResumen(tareas)` debe devolver un
+objeto con las siguientes características:
+
+```javascript
+{
+  total: 5,
+  pendientes: 3,
+  completadas: 2
+}
+```
+
+Para calcular el total, basta con utilizar la propiedad `.length` de la lista.
+Para obtener la cantidad de tareas pendientes y completadas, reutilizamos las
+funciones creadas en la Misión 5: `obtenerPendientes(tareas)` y
+`obtenerTerminadas(tareas)`. De esta forma, solo necesitamos consultar la
+longitud de cada resultado, en lugar de repetir la lógica de filtrado.
+
+```javascript
+export function obtenerResumen(tareas) {
+  const total = tareas.length;
+  const completadas = this.obtenerTerminadas(tareas).length;
+  const pendientes = this.obtenerPendientes(tareas).length;
+
+  return {
+    total,
+    completadas,
+    pendientes
+  };
+}
+```
+
+¿Cuál comunica mejor la intención?
+
+La implementación que reutiliza funciones ya creadas y probadas, porque expresa
+claramente que el resumen se construye a partir de los filtros existentes.
+
+¿Cuál hace más trabajo?
+
+La implementación que realiza el cálculo nuevamente, porque repite una lógica
+que ya existe. Es preferible mantener el código dividido en funciones
+pequeñas y reutilizables.
+
+¿Cuál es más fácil de mantener?
+
+La implementación que reutiliza las funciones existentes, ya que cualquier
+cambio en la lógica de filtrado se realiza en un solo lugar.
+
+```javascript
+describe("obtenerResumen", () => {
+  it("devuelve el resumen de tareas", () => {
+    // Arrange
+    const tareas = [
+      { id: 1, titulo: "Tarea 1", completada: false },
+      { id: 2, titulo: "Tarea 2", completada: true }
+    ];
+
+    // Act
+    const resultado = obtenerResumen(tareas);
+
+    // Assert
+    expect(resultado).toEqual({
+      total: 2,
+      pendientes: 1,
+      completadas: 1
+    });
+  });
+
+  it("retorna resumen vacío cuando la colección está vacía", () => {
+    // Act
+    const resultado = obtenerResumen([]);
+
+    // Assert
+    expect(resultado).toEqual({
+      total: 0,
+      completadas: 0,
+      pendientes: 0
+    });
+  });
+});
+```
+
+Para diseñar las pruebas, se consideraron dos escenarios principales. El
+primero utiliza una colección con tareas pendientes y completadas para
+comprobar que `total`, `pendientes` y `completadas` se calculen correctamente.
+El segundo utiliza una colección vacía para verificar que la función devuelva
+ceros en todos los contadores y no produzca errores. En ambos casos, las
+aserciones comparan el objeto completo, por lo que también validan los nombres
+y los valores de todas sus propiedades.
+
+Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
+está en orden. Las dos pruebas de `obtenerResumen` pasaron sin fallos.
+
+![alt text](images/image-8.png)

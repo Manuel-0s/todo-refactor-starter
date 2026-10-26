@@ -17,3 +17,6 @@ build/
 Thumbs.db
 
 .vscode/
+
+# Documentos académicos y reportes locales
+docs/

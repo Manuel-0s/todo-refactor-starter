@@ -9,8 +9,8 @@
 // MISIÓN 2
 export function crearTarea(id, titulo) {
   return {
-    id: id,
-    titulo: titulo,
+    id,
+    titulo,
     completada: false
   };
 }
@@ -34,7 +34,6 @@ export function obtenerTerminadas(tareas) {
   return tareas.filter(tarea => tarea.completada);
 }
 
-
 // MISIÓN 6
 export function cambiarEstado(tareas, id) {
   return tareas.map(tarea =>
@@ -55,7 +54,9 @@ export function obtenerResumen(tareas) {
 
   return {
     total,
-    completadas,
-    pendientes
+    pendientes,
+    completadas
   };
 }
+
+

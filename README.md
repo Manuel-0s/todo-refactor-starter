@@ -69,9 +69,10 @@ El puerto puede cambiar según la configuración de Live Server.
 
 Documenta al menos una iteración:
 
-- **RED:** ¿qué prueba escribiste y por qué falló?
-- **GREEN:** ¿cuál fue el cambio mínimo que la hizo pasar?
-- **REFACTOR:** ¿qué mejoraste sin cambiar el comportamiento?
+- **RED:** Escribimos la prueba `alterna el estado completada de la tarea con el id especificado` para `cambiarEstado(tareas, id)` en `tests/taskService.test.js`. Falló porque la función aún lanzaba `Error("Misión 6 pendiente: implementar cambiarEstado()")`.
+- **GREEN:** Implementamos el código mínimo utilizando `map()` e inmutabilidad: `tareas.map(t => t.id === id ? { ...t, completada: !t.completada } : t)`. Con esto la prueba pasó de inmediato a verde.
+- **REFACTOR:** Verificamos que las demás tareas no mutaran por referencia (`expect(resultado).not.toBe(tareas)`) y que el objeto no alterara la colección original si el ID no existía, manteniendo una función puramente determinista sin efectos secundarios.
+
 
 ## Pair Programming
 
@@ -769,3 +770,35 @@ Estas pruebas confirmaron que la interfaz ya no contiene la lógica de negocio
 principal. `app.js` se encarga de leer eventos y representar el estado,
 mientras que `taskService.js` conserva las operaciones sobre las tareas y se
 mantiene protegido por pruebas unitarias.
+
+## Misión 10 · Refactor final protegido por pruebas
+
+- **Driver:** Uriel
+- **Navigator:** Manuel
+
+Con la totalidad de la suite de pruebas unitarias en verde (20/20), realizamos una revisión exhaustiva de diseño, legibilidad y cohesión tanto en `taskService.js` como en `app.js`:
+
+### 1. Refactorizaciones aplicadas
+1. **Property Shorthand en `crearTarea` (`src/taskService.js`):**
+   - Se simplificó la asignación explícita `id: id, titulo: titulo` a la sintaxis moderna `{ id, titulo, completada: false }`, mejorando la concisión sin alterar el contrato.
+2. **Extracción de responsabilidad en `app.js` (`calcularSiguienteId`):**
+   - El cálculo del identificador incremental dentro del manejador del evento `submit` se extrajo a una función pura independiente `calcularSiguienteId(listaTareas)`. Esto reduce la complejidad ciclomática del controlador de eventos y aumenta la cohesión del módulo.
+3. **Legibilidad y orden en el resumen:**
+   - Se unificó la denominación del modelo para garantizar que las propiedades calculadas mantengan una correspondencia directa entre la lógica de dominio y los contadores de la vista.
+
+### 2. Comprobación con la red de seguridad
+Tras cada pequeño cambio estructural, se ejecutó `npm test` para asegurar que ningún comportamiento observable haya sufrido alteraciones accidentales:
+
+```bash
+npm test
+```
+
+Los 20 casos de prueba continúan pasando al 100%, validando que el refactor preservó intacto el funcionamiento del sistema.
+
+![Suite de pruebas en verde tras el refactor final](images/image-16.png)
+
+## Reflexión de pareja
+
+Durante este laboratorio comprobamos en la práctica cómo la disciplina de diseño guiada por pruebas (TDD) y la separación rigurosa de responsabilidades transforman un código inicialmente frágil en una arquitectura confiable. El cambio que más incrementó la mantenibilidad del proyecto fue desacoplar el estado y las operaciones de dominio de la manipulación del DOM, concentrando las reglas en funciones puras e inmutables dentro de `taskService.js`. En la versión legacy, cualquier interacción modificaba directamente arreglos globales y elementos HTML, lo que dificultaba predecir efectos secundarios. Con el nuevo diseño, la interfaz en `app.js` actúa meramente como un adaptador que reacciona a eventos y renderiza el estado. 
+
+Por otro lado, las pruebas unitarias que mayor confianza aportaron fueron las de inmutabilidad en operaciones como `cambiarEstado` y `agregarTarea`. Verificar explícitamente que la referencia en memoria del arreglo resultante fuera distinta a la inicial (`expect(resultado).not.toBe(tareas)`) nos aseguró que nunca mutaríamos el estado original por descuido. Contar con una suite automatizada de 20 pruebas ejecutándose en milisegundos nos permitió refactorizar sin miedo a romper funcionalidades previas, demostrando que las pruebas no son un trámite posterior, sino una red de seguridad indispensable para evolucionar software de calidad.

@@ -67,6 +67,10 @@ function render() {
   summary.textContent = `Total: ${resumen.total} · Pendientes: ${resumen.pendientes} · Completadas: ${resumen.completadas}`;
 }
 
+function calcularSiguienteId(listaTareas) {
+  return listaTareas.reduce((maxId, tarea) => Math.max(maxId, tarea.id), 0) + 1;
+}
+
 form.addEventListener("submit", (event) => {
   event.preventDefault();
   const titulo = input.value.trim();
@@ -74,7 +78,7 @@ form.addEventListener("submit", (event) => {
     message.textContent = "Escribe un título antes de agregar.";
     return;
   }
-  const siguienteId = tareas.reduce((maxId, tarea) => Math.max(maxId, tarea.id), 0) + 1;
+  const siguienteId = calcularSiguienteId(tareas);
   const nuevaTarea = crearTarea(siguienteId, titulo);
   tareas = agregarTarea(tareas, nuevaTarea);
   input.value = "";

@@ -73,7 +73,6 @@ Documenta al menos una iteración:
 - **GREEN:** Implementamos el código mínimo utilizando `map()` e inmutabilidad: `tareas.map(t => t.id === id ? { ...t, completada: !t.completada } : t)`. Con esto la prueba pasó de inmediato a verde.
 - **REFACTOR:** Verificamos que las demás tareas no mutaran por referencia (`expect(resultado).not.toBe(tareas)`) y que el objeto no alterara la colección original si el ID no existía, manteniendo una función puramente determinista sin efectos secundarios.
 
-
 ## Pair Programming
 
 Registra por misión quién fue **Driver** y quién **Navigator**. Intercambien roles con frecuencia y no hagan commit hasta que ambos puedan explicar el código y la prueba.
@@ -412,12 +411,12 @@ Al reejecutar las pruebas, los 12 tests pasaron de inmediato en verde.
 - **Driver:** Uriel
 - **Navigator:** Manuel
 
-
 En esta misión se implementó `cambiarEstado(tareas, id)` para alternar la propiedad `completada` de una tarea manteniendo la inmutabilidad tanto del arreglo principal como de los objetos internos.
 
 ### RED: escribir las pruebas unitarias
 
 Diseñamos 3 pruebas para validar el comportamiento esperado y garantizar que no haya efectos secundarios:
+
 1. **Cambio de estado correcto:** Que invierta la propiedad `completada` (`false` a `true` o viceversa) de la tarea indicada.
 2. **Inmutabilidad y preservación:** Que las demás tareas permanezcan intactas y no se muten las instancias originales en memoria.
 3. **ID inexistente:** Que si no existe el identificador, devuelva un arreglo equivalente sin errores.
@@ -427,26 +426,26 @@ describe("cambiarEstado", () => {
   it("alterna el estado completada de la tarea con el id especificado", () => {
     const tareas = [
       { id: 1, titulo: "Tarea 1", completada: false },
-      { id: 2, titulo: "Tarea 2", completada: false }
+      { id: 2, titulo: "Tarea 2", completada: false },
     ];
     const resultado = cambiarEstado(tareas, 1);
-    expect(resultado.find(t => t.id === 1)).toEqual({
+    expect(resultado.find((t) => t.id === 1)).toEqual({
       id: 1,
       titulo: "Tarea 1",
-      completada: true
+      completada: true,
     });
   });
 
   it("mantiene intactas las demás tareas sin mutarlas", () => {
     const tareas = [
       { id: 1, titulo: "Tarea 1", completada: false },
-      { id: 2, titulo: "Tarea 2", completada: false }
+      { id: 2, titulo: "Tarea 2", completada: false },
     ];
     const resultado = cambiarEstado(tareas, 1);
-    expect(resultado.find(t => t.id === 2)).toEqual({
+    expect(resultado.find((t) => t.id === 2)).toEqual({
       id: 2,
       titulo: "Tarea 2",
-      completada: false
+      completada: false,
     });
     expect(resultado).not.toBe(tareas);
     expect(tareas[0].completada).toBe(false);
@@ -470,7 +469,7 @@ Implementamos `cambiarEstado` mediante `map()` y el operador spread `{ ...tarea 
 ```javascript
 export function cambiarEstado(tareas, id) {
   return tareas.map((tarea) =>
-    tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea
+    tarea.id === id ? { ...tarea, completada: !tarea.completada } : tarea,
   );
 }
 ```
@@ -491,7 +490,7 @@ tareas cuyo identificador es diferente del que se desea eliminar.
 
 ```javascript
 export function eliminarTarea(tareas, id) {
-  return tareas.filter(tarea => tarea.id !== id);
+  return tareas.filter((tarea) => tarea.id !== id);
 }
 ```
 
@@ -508,7 +507,7 @@ describe("eliminarTarea", () => {
     // Arrange
     const tareas = [
       { id: 1, titulo: "Tarea 1", completada: false },
-      { id: 2, titulo: "Tarea 2", completada: false }
+      { id: 2, titulo: "Tarea 2", completada: false },
     ];
 
     // Act
@@ -516,15 +515,13 @@ describe("eliminarTarea", () => {
 
     // Assert
     expect(resultado).toEqual([
-      { id: 2, titulo: "Tarea 2", completada: false }
+      { id: 2, titulo: "Tarea 2", completada: false },
     ]);
   });
 
   it("retorna una copia equivalente si el id no existe", () => {
     // Arrange
-    const tareas = [
-      { id: 1, titulo: "Tarea 1", completada: false }
-    ];
+    const tareas = [{ id: 1, titulo: "Tarea 1", completada: false }];
 
     // Act
     const resultado = eliminarTarea(tareas, 999);
@@ -542,7 +539,6 @@ describe("eliminarTarea", () => {
     expect(resultado).toEqual([]);
   });
 });
-
 ```
 
 Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
@@ -581,7 +577,7 @@ export function obtenerResumen(tareas) {
   return {
     total,
     completadas,
-    pendientes
+    pendientes,
   };
 }
 ```
@@ -608,7 +604,7 @@ describe("obtenerResumen", () => {
     // Arrange
     const tareas = [
       { id: 1, titulo: "Tarea 1", completada: false },
-      { id: 2, titulo: "Tarea 2", completada: true }
+      { id: 2, titulo: "Tarea 2", completada: true },
     ];
 
     // Act
@@ -618,7 +614,7 @@ describe("obtenerResumen", () => {
     expect(resultado).toEqual({
       total: 2,
       pendientes: 1,
-      completadas: 1
+      completadas: 1,
     });
   });
 
@@ -630,7 +626,7 @@ describe("obtenerResumen", () => {
     expect(resultado).toEqual({
       total: 0,
       completadas: 0,
-      pendientes: 0
+      pendientes: 0,
     });
   });
 });
@@ -648,7 +644,6 @@ Una vez definidas las pruebas, ejecutamos `npm test` para comprobar que todo
 está en orden. Las dos pruebas de `obtenerResumen` pasaron sin fallos.
 
 ![alt text](images/image-8.png)
-
 
 ## Misión 9
 
@@ -694,7 +689,7 @@ Por ese motivo, la interfaz mostraba un resultado incorrecto.
 `tarea.titulo` y representar cada tarea a partir de sus propiedades:
 
 ```javascript
-tareasVisibles.forEach(tarea => {
+tareasVisibles.forEach((tarea) => {
   const li = document.createElement("li");
   const title = document.createElement("span");
   title.className = "title";
@@ -776,9 +771,10 @@ mantiene protegido por pruebas unitarias.
 - **Driver:** Uriel
 - **Navigator:** Manuel
 
-Con la totalidad de la suite de pruebas unitarias en verde (20/20), realizamos una revisión exhaustiva de diseño, legibilidad y cohesión tanto en `taskService.js` como en `app.js`:
+Con la totalidad de la suite de pruebas unitarias en verde (20/20), realizamos una revisión de diseño, legibilidad y cohesión tanto en `taskService.js` como en `app.js`:
 
 ### 1. Refactorizaciones aplicadas
+
 1. **Property Shorthand en `crearTarea` (`src/taskService.js`):**
    - Se simplificó la asignación explícita `id: id, titulo: titulo` a la sintaxis moderna `{ id, titulo, completada: false }`, mejorando la concisión sin alterar el contrato.
 2. **Extracción de responsabilidad en `app.js` (`calcularSiguienteId`):**
@@ -787,6 +783,7 @@ Con la totalidad de la suite de pruebas unitarias en verde (20/20), realizamos u
    - Se unificó la denominación del modelo para garantizar que las propiedades calculadas mantengan una correspondencia directa entre la lógica de dominio y los contadores de la vista.
 
 ### 2. Comprobación con la red de seguridad
+
 Tras cada pequeño cambio estructural, se ejecutó `npm test` para asegurar que ningún comportamiento observable haya sufrido alteraciones accidentales:
 
 ```bash
@@ -797,8 +794,94 @@ Los 20 casos de prueba continúan pasando al 100%, validando que el refactor pre
 
 ![Suite de pruebas en verde tras el refactor final](images/image-16.png)
 
+## Misión 11 · Nuevo requerimiento (Opción B: Buscar por texto)
+
+- **Driver:** Uriel
+- **Navigator:** Manuel
+
+Para comprobar si la arquitectura resultante del refactor facilita la extensión de software sin acoplamiento ni regresiones, implementamos la **Opción B: Buscar por texto** mediante la disciplina TDD (RED → GREEN).
+
+### Pregunta de prueba y diseño
+> **¿La búsqueda debe ignorar mayúsculas y minúsculas?**  
+> Sí. Para garantizar una experiencia de usuario óptima y robusta, la comparación debe ser normalizada (`toLowerCase()`) e ignorar espacios vacíos accidentales (`trim()`).
+
+### RED: escribir las pruebas unitarias
+
+Diseñamos 4 pruebas en `tests/taskService.test.js` para cubrir todos los escenarios:
+1. **Insensibilidad a mayúsculas/minúsculas:** Buscar `"SOFTWARE"` debe encontrar `"Revisar requisitos de software"`.
+2. **Coincidencia parcial:** Buscar `"prue"` debe localizar `"Diseñar pruebas unitarias"`.
+3. **Sin coincidencias:** Buscar un término inexistente retorna un arreglo vacío `[]`.
+4. **Término vacío o con espacios:** Buscar `"   "` no debe filtrar nada y debe devolver la lista completa intacta.
+
+```javascript
+describe("buscarPorTexto", () => {
+  const tareasPrueba = [
+    { id: 1, titulo: "Revisar requisitos de software", completada: false },
+    { id: 2, titulo: "Diseñar pruebas unitarias", completada: true },
+    { id: 3, titulo: "Refactorizar código limpio", completada: false }
+  ];
+
+  it("encuentra tareas ignorando mayúsculas y minúsculas", () => {
+    const resultado = buscarPorTexto(tareasPrueba, "SOFTWARE");
+    expect(resultado).toEqual([
+      { id: 1, titulo: "Revisar requisitos de software", completada: false }
+    ]);
+  });
+
+  it("encuentra tareas por coincidencia parcial de texto", () => {
+    const resultado = buscarPorTexto(tareasPrueba, "prue");
+    expect(resultado).toEqual([
+      { id: 2, titulo: "Diseñar pruebas unitarias", completada: true }
+    ]);
+  });
+
+  it("devuelve arreglo vacío cuando no hay coincidencias", () => {
+    const resultado = buscarPorTexto(tareasPrueba, "arquitectura cloud");
+    expect(resultado).toEqual([]);
+  });
+
+  it("retorna todas las tareas si el término de búsqueda está vacío o solo contiene espacios", () => {
+    const resultado = buscarPorTexto(tareasPrueba, "   ");
+    expect(resultado).toEqual(tareasPrueba);
+  });
+});
+```
+
+Al ejecutar `npm test`, las 4 pruebas fallaron inicialmente porque `buscarPorTexto` aún no estaba definida en el servicio (fase RED).
+
+### GREEN: implementar el código mínimo
+
+Implementamos la función pura en `src/taskService.js` combinando `filter()`, `toLowerCase()` e `includes()`:
+
+```javascript
+export function buscarPorTexto(tareas, termino) {
+  const textoLimpio = (termino ?? "").trim().toLowerCase();
+  if (!textoLimpio) {
+    return tareas;
+  }
+  return tareas.filter((tarea) =>
+    tarea.titulo.toLowerCase().includes(textoLimpio)
+  );
+}
+```
+
+Al volver a ejecutar la suite, las **24 pruebas unitarias pasaron al 100% en verde**:
+- Las 20 pruebas previas se preservaron sin regresiones.
+- Las 4 pruebas nuevas correspondientes a la extensión pasaron correctamente.
+
+Esto demuestra que el desacoplamiento entre el DOM y la lógica de dominio permitió agregar un nuevo requerimiento en cuestión de minutos y con total seguridad.
+
+![Suite de 24 pruebas en verde con la Misión 11](images/image-17.png)
+
+### Integración en la interfaz de usuario
+
+Para cerrar el ciclo de la extensión, integramos la barra de búsqueda en `index.html` y la conectamos en `app.js` mediante el evento `input`, permitiendo filtrar las tareas en tiempo real mientras el usuario escribe:
+
+![Búsqueda de tareas en tiempo real funcionando en la app](images/image-18.png)
+
 ## Reflexión de pareja
 
-Durante este laboratorio comprobamos en la práctica cómo la disciplina de diseño guiada por pruebas (TDD) y la separación rigurosa de responsabilidades transforman un código inicialmente frágil en una arquitectura confiable. El cambio que más incrementó la mantenibilidad del proyecto fue desacoplar el estado y las operaciones de dominio de la manipulación del DOM, concentrando las reglas en funciones puras e inmutables dentro de `taskService.js`. En la versión legacy, cualquier interacción modificaba directamente arreglos globales y elementos HTML, lo que dificultaba predecir efectos secundarios. Con el nuevo diseño, la interfaz en `app.js` actúa meramente como un adaptador que reacciona a eventos y renderiza el estado. 
+Durante este laboratorio comprobamos en la práctica cómo la disciplina de diseño guiada por pruebas (TDD) y la separación rigurosa de responsabilidades transforman un código inicialmente frágil en una arquitectura confiable. El cambio que más incrementó la mantenibilidad del proyecto fue desacoplar el estado y las operaciones de dominio de la manipulación del DOM, concentrando las reglas en funciones puras e inmutables dentro de `taskService.js`. En la versión legacy, cualquier interacción modificaba directamente arreglos globales y elementos HTML, lo que dificultaba predecir efectos secundarios. Con el nuevo diseño, la interfaz en `app.js` actúa meramente como un adaptador que reacciona a eventos y renderiza el estado.
 
-Por otro lado, las pruebas unitarias que mayor confianza aportaron fueron las de inmutabilidad en operaciones como `cambiarEstado` y `agregarTarea`. Verificar explícitamente que la referencia en memoria del arreglo resultante fuera distinta a la inicial (`expect(resultado).not.toBe(tareas)`) nos aseguró que nunca mutaríamos el estado original por descuido. Contar con una suite automatizada de 20 pruebas ejecutándose en milisegundos nos permitió refactorizar sin miedo a romper funcionalidades previas, demostrando que las pruebas no son un trámite posterior, sino una red de seguridad indispensable para evolucionar software de calidad.
+Por otro lado, las pruebas unitarias que mayor confianza aportaron fueron las de inmutabilidad en operaciones como `cambiarEstado` y `agregarTarea`. Verificar explícitamente que la referencia en memoria del arreglo resultante fuera distinta a la inicial (`expect(resultado).not.toBe(tareas)`) nos aseguró que nunca mutaríamos el estado original por descuido. Contar con una suite automatizada de 24 pruebas ejecutándose en milisegundos nos permitió refactorizar sin miedo a romper funcionalidades previas, demostrando que las pruebas no son un trámite posterior, sino una red de seguridad indispensable para evolucionar software de calidad.
+

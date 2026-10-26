@@ -14,11 +14,13 @@ import {
   obtenerTerminadas,
   cambiarEstado,
   eliminarTarea,
-  obtenerResumen
+  obtenerResumen,
+  buscarPorTexto
 } from "./taskService.js";
 
 const form = document.querySelector("#task-form");
 const input = document.querySelector("#task-input");
+const searchInput = document.querySelector("#search-input");
 const list = document.querySelector("#task-list");
 const message = document.querySelector("#message");
 const summary = document.querySelector("#summary");
@@ -30,15 +32,18 @@ let tareas = [
   crearTarea(3, "Refactorizar código")
 ];
 let filtro = "todas";
+let terminoBusqueda = "";
 
 function render() {
   list.innerHTML = "";
-  const tareasVisibles =
+  const tareasPorFiltro =
     filtro === "pendientes"
       ? obtenerPendientes(tareas)
       : filtro === "terminadas"
         ? obtenerTerminadas(tareas)
         : tareas;
+
+  const tareasVisibles = buscarPorTexto(tareasPorFiltro, terminoBusqueda);
 
   tareasVisibles.forEach(tarea => {
     const li = document.createElement("li");
@@ -112,5 +117,12 @@ filters.forEach(button =>
     render();
   })
 );
+
+if (searchInput) {
+  searchInput.addEventListener("input", (event) => {
+    terminoBusqueda = event.target.value;
+    render();
+  });
+}
 
 render();

@@ -59,4 +59,16 @@ export function obtenerResumen(tareas) {
   };
 }
 
+// MISIÓN 11 (Opción B): Nuevo requerimiento Buscar por texto
+export function buscarPorTexto(tareas, termino) {
+  const textoLimpio = (termino ?? "").trim().toLowerCase();
+  if (!textoLimpio) {
+    return tareas;
+  }
+  return tareas.filter(tarea =>
+    tarea.titulo.toLowerCase().includes(textoLimpio)
+  );
+}
+
+
 

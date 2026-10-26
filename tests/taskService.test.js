@@ -8,7 +8,8 @@ import {
   obtenerTerminadas,
   cambiarEstado,
   eliminarTarea,
-  obtenerResumen
+  obtenerResumen,
+  buscarPorTexto
 } from "../src/taskService.js";
 
 /*
@@ -328,6 +329,51 @@ describe("obtenerResumen", () => {
   });
 });
 
+// MISIÓN 11 (Opción B): Buscar por texto insensible a mayúsculas y minúsculas
+describe("buscarPorTexto", () => {
+  const tareasPrueba = [
+    { id: 1, titulo: "Revisar requisitos de software", completada: false },
+    { id: 2, titulo: "Diseñar pruebas unitarias", completada: true },
+    { id: 3, titulo: "Refactorizar código limpio", completada: false }
+  ];
+
+  it("encuentra tareas ignorando mayúsculas y minúsculas", () => {
+    // Act (Búsqueda en mayúsculas 'SOFTWARE')
+    const resultado = buscarPorTexto(tareasPrueba, "SOFTWARE");
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 1, titulo: "Revisar requisitos de software", completada: false }
+    ]);
+  });
+
+  it("encuentra tareas por coincidencia parcial de texto", () => {
+    // Act ('pruebas' o 'prue')
+    const resultado = buscarPorTexto(tareasPrueba, "prue");
+
+    // Assert
+    expect(resultado).toEqual([
+      { id: 2, titulo: "Diseñar pruebas unitarias", completada: true }
+    ]);
+  });
+
+  it("devuelve arreglo vacío cuando no hay coincidencias", () => {
+    // Act
+    const resultado = buscarPorTexto(tareasPrueba, "arquitectura cloud");
+
+    // Assert
+    expect(resultado).toEqual([]);
+  });
+
+  it("retorna todas las tareas si el término de búsqueda está vacío o solo contiene espacios", () => {
+    // Act
+    const resultado = buscarPorTexto(tareasPrueba, "   ");
+
+    // Assert
+    expect(resultado).toEqual(tareasPrueba);
+  });
+});
+
 // Los imports anteriores quedan preparados para que construyas la suite de forma incremental.
 void agregarTarea;
 void buscarTarea;
@@ -336,3 +382,5 @@ void obtenerTerminadas;
 void cambiarEstado;
 void eliminarTarea;
 void obtenerResumen;
+void buscarPorTexto;
+
